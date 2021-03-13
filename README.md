@@ -1,0 +1,1 @@
+A simple Stock Tracker built with Python, Kivy, Pandas, and Numpy
