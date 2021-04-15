@@ -1,0 +1,14 @@
+<SearchBar>
+    size_hint: 1, 0.1
+    pos_hint: {'bottom': 1}
+
+    TextInput:
+        id: symbol
+        multiline: False
+        text: 'Enter ticker symbol'
+        size_hint: 3, 1
+        on_text_validate: root.on_press()
+        on_focus: root.clear_text()
+    Button:
+        text: 'Search'
+        on_press: root.on_press()

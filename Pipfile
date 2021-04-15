@@ -8,9 +8,9 @@ pandas = "*"
 pandas-datareader = "*"
 matplotlib = "*"
 numpy = "*"
-mpl-finance = "*"
 kivy = "*"
 "kivy-garden.graph" = "*"
+mplfinance = "*"
 
 [dev-packages]
 

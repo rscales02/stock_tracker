@@ -1,0 +1,38 @@
+<EditInput@TextInput>
+    multiline: False
+    size_hint: None, 0.25
+    pos_hint: {'top': 0.6}
+
+<EditModal>
+    size_hint: .8, .8
+    canvas.before:
+        BorderImage:
+            # BorderImage behaves like the CSS BorderImage
+            border: 10, 10, 10, 10
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        id: modal
+        orientation: 'vertical'
+        size_hint: 1, 1
+
+        BoxLayout:
+            id: box
+            padding: [10, 0, 10, 0]
+            Label:
+                text: 'Symbol:'
+            EditInput:
+                id: symbol
+            Label:
+                text: 'Quantity:'
+            EditInput:
+                id: quantity
+            Label:
+                text: 'Price:'
+            EditInput:
+                id: price
+            Label:
+                text: 'Crypto?'
+            CheckBox:
+                id: crypto

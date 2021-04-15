@@ -1,0 +1,18 @@
+<StockGraph>
+    size_hint: 0.75, 0.9
+    pos_hint: {'top': 1, 'left': 1}
+    orientation: 'vertical'
+    Graph:
+        id: graph
+        xlabel: 'Date'
+        ylabel: 'Value ($)'
+        ymin: 10000
+        ymax: 300000
+        xmin: 18263
+        xmax: 18816
+
+    Button:
+        size_hint: 1, 0.25
+        pos_hint: {'top': 0}
+        text: 'Test me!'
+        on_press: root.on_press()

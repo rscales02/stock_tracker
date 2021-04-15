@@ -1,0 +1,58 @@
+<StockList>
+    size_hint: 0.25, 0.9
+    pos_hint: {'right': 1, 'top': 1}
+    orientation: 'vertical'
+    Label:
+        text: 'Stocks'
+        size_hint: 1, 0.2
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.2
+        Label:
+            text: 'Symbol'
+        Label:
+            text: 'Quantity'
+        Label:
+            text: 'Price'
+    Stocks:
+    Label:
+        text: 'Crypto'
+        size_hint: 1, 0.2
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.2
+        Label:
+            text: 'Symbol'
+        Label:
+            text: 'Quantity'
+        Label:
+            text: 'Price'
+    Crypto:
+
+
+<RecycleButton>:
+    orientation: 'horizontal'
+    Label:
+        text: root.id
+    Label:
+        text: root.quantity
+    Label:
+        text: root.price
+
+<Stocks>:
+    viewclass: 'RecycleButton'
+    SelectableRecycleBoxLayout:
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+
+<Crypto>:
+    viewclass: 'RecycleButton'
+    SelectableRecycleBoxLayout:
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'

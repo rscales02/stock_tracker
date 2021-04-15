@@ -1,47 +1,51 @@
-from pandas_datareader import data
-import pandas as pd
+from pandas_datareader import DataReader as Data
+import pandas
+import os
 
 from datetime import date
 
-
-def get_stock_df():
-    # return list of stock tickers saved
-    return pd.read_csv('../data/stocks.csv'), pd.read_csv('../data/crypto.csv')
+from function.stock_editor import StockEditor
 
 
-def get_ticker_info():
-    # retrieve ticker info
-    stock, crypto = get_stock_df()
-    stock_list = stock.Symb.values
-    crypto_list = crypto.Symb.values
-    start = date(2017, 1, 1)
+def stock_grabber():
+    """
+    Take list of stocks and retrieve stock data using P DataReader, save as a .pkl file
+    :return: None
+    """
+    stocks, crypto = StockEditor().list_stocks()
+    stock_list = [stock[0] for stock in stocks]
+    crypto_list = [crypt[0] for crypt in crypto]
+    start = date(2020, 1, 1)
     end = date.today()
-    stock_ticker = data.DataReader(stock_list, 'yahoo', start=start, end=end)
-    crypto_ticker = data.DataReader(crypto_list, 'yahoo', start=start, end=end)
-    stock_ticker.to_pickle('stock_ticker.pkl')
-    crypto_ticker.to_pickle('crypto_ticker.pkl')
-    weighted_ratio()
-    return stock_ticker
+    if not os.path.join('data/stock.pkl'):
+        stock_ticker = Data(stock_list, 'yahoo', start, end)
+        stock_pickle = add_adj_value(stock_ticker)
+        crypto_ticker = Data(crypto_list, 'yahoo', start, end)
+        stock_pickle.to_pickle(os.path.join('data/stock.pkl'))
+        crypto_pickle = add_adj_value(crypto_ticker)
+        crypto_pickle.to_pickle(os.path.join('data/crypto.pkl'))
 
 
-def closing_val():
-    # add and update portfolio values based on last Close Price
-    pickle = pd.read_pickle('ticker.pkl')
-    close = pickle['Close']
-    stocks = pd.read_csv('../data/stocks.csv', index_col=0)
-    close_vals = [stocks.Quantity[stocks.Stock == symb].values[0] * close.tail(1)[symb].values[0] for symb in
-                  stocks.Stock]
-    return close_vals
-    # stocks['Closing Val'] = close_vals
-    # stocks.to_csv('stocks.csv')
+def add_adj_value(data):
+    """
+    Add column Adj Val (Adj Close * # of Stock) to stock data
+    :param data: results from pandas data reader (Pandas Dataframe)
+    :return: results from PDR + Adj Val Column (Pandas Dataframe)
+    """
+    pickle = data.copy()
+    adj_close = pickle['Adj Close']
 
+    # get list of stocks [(symbol, quantity, price), ...]
+    stocks, crypto = StockEditor().list_stocks()
+    if stocks[0][0] in adj_close:
+        data_list = stocks
+    elif crypto[0][0] in adj_close:
+        data_list = crypto
+    else:
+        print('Stock ticker not available')
+    adj_val = pandas.DataFrame()
+    for i, stock in enumerate(data_list):
+        adj_val.insert(loc=i, column=('Adj Val', stock[0]), value=adj_close[stock[0]] * stock[1])
+    pickle = pickle.merge(adj_val, on='Date')
 
-def weighted_ratio():
-    # Total percent of portfolio as rated by Closing Val
-    close = closing_val()
-    stocks = pd.read_csv('../data/stocks.csv', index_col=0)
-    total = sum(close)
-    ratio = close / total
-    stocks['% Total Val'] = ratio
-    print(stocks)
-    stocks.to_csv('stocks.csv')
+    return pickle
